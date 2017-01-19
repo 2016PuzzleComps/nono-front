@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
+        <div id="buttonsDiv">
+            <button type="button" id="resetButton" class="button">Reset</button>
+		    <button type="button" id="undoButton" class="button">Undo</button>
+        </div>
+		<p><canvas id="gameCanvas" width="662" height="800"> </canvas></p>
+
+		<div id="finish" class="overlay">
+			<div class="overlay-content">
+				<p id="title"></p>
+				<p id="body"></p>
+			</div>
+		</div>
+
+		<script src="{{ url_for('static', filename='game.js') }}"></script>
+	</body>
+</html>

@@ -1,0 +1,89 @@
+body {
+    text-align: center;
+}
+
+.button {
+    font-size: 16px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+	outline: none;
+    font-family: sans-serif;
+}
+.button:hover {
+	background-color: #71c174;
+}
+.button:active {
+	background-color: #2f6a31;
+}
+.giveUpButton {
+    background-color: red;
+}
+.giveUpButton:hover {
+	background-color: #e83c3c;
+}
+.giveUpButton:active {
+	background-color: #931919;
+}
+
+.material-icons {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+#gameCanvas {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.overlay {
+    height: 0%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,.8);
+    overflow-y: hidden;
+    transition: 0.1s;
+}
+
+.overlay-content {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px;
+}
+
+
+.overlay p {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 36px;
+    color: white;
+    display: block;
+    transition: 0.3s;
+}
+
+.overlay p:hover, .overlay p:focus {
+    color: #c1c1c1;
+}
+
+.overlay .closebtn {
+    position: absolute;
+    cursor: pointer;
+    top: 0px;
+    right: 45px;
+    font-size: 60px;
+}
