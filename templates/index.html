@@ -1,22 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-	</head>
-	<body>
+    <head>
+        <meta charset="utf-8">
+         <title>Nonograms Puzzle</title>
+        <meta name="description" content="A Javascript implementation of a Nonograms puzzle for 2016 puzzle comps.">
+		<script src="{{ url_for('static', filename='jquery-3.1.1.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='nono.js') }}"></script>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
-        <div id="buttonsDiv">
-            <button type="button" id="resetButton" class="button">Reset</button>
-		    <button type="button" id="undoButton" class="button">Undo</button>
-        </div>
-		<p><canvas id="gameCanvas" width="662" height="800"> </canvas></p>
-
-		<div id="finish" class="overlay">
-			<div class="overlay-content">
-				<p id="title"></p>
-				<p id="body"></p>
-			</div>
+    </head>
+	<body>
+		<script type="text/javascript">
+		$( document ).ready( function() {
+			var game = Nonograms.getInstance();
+			$( '#board').append( game.getGameBoard() );
+			$( '#undo').click( function() {
+				game.undo();
+			} );
+			$( '#reset').click( function() {
+				game.reset();
+			} );
+		} );
+		</script>
+		<div id="buttonsDiv">
+			<button id="undo">Undo</button>
+			<button id="reset">Reset</button>
 		</div>
-
-		<script src="{{ url_for('static', filename='game.js') }}"></script>
+		<div id="board"></div>
 	</body>
 </html>

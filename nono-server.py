@@ -3,7 +3,6 @@ import flask
 import json
 import hashlib
 import time
-from validation import *
 
 app = flask.Flask(__name__)
 
