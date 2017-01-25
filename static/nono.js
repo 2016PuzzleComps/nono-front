@@ -67,7 +67,8 @@ var Nonograms = ( function ( $ ){
 		buildGUI: function() {
 			var $td, $tr,
 				$table = $( '<table>' )
-					.addClass( 'nonograms-container' );
+					.addClass( 'nonograms-container' )
+					.on( 'contextmenu', false );
 			var width = 5;
 
 			for ( var i = -1; i < width; i++ ) {
@@ -94,7 +95,8 @@ var Nonograms = ( function ( $ ){
 							.attr( 'src', 'static/'+picture )
 							.data( 'row', i )
 							.data( 'col', j )
-							.on( 'mouseclick', $.proxy( this.onMouseClick, this) );
+							.on( 'click', $.proxy( this.onLeftClick, this) )
+							.on( 'contextmenu',  $.proxy( this.onRightClick, this) );
 
 						$td = $( '<td>' ).append( this.$cellMatrix[i][j] );
 					}
@@ -158,15 +160,37 @@ var Nonograms = ( function ( $ ){
 		},
 
 		/**
-		 * Handle mouseclick events.
+		 * Handle left mouse click events.
 		 * 
 		 * @param {jQuery.event} e mouseclick event
 		 */
-		onMouseClick: function( e ) {
+		onLeftClick: function( e ) {
+			var picture = 'static/dark.png';
+			this.onMouseClick(e, picture);
+		},
+
+		/**
+		 * Handle right mouse click events.
+		 * 
+		 * @param {jQuery.event} e mouseclick event
+		 */
+		onRightClick: function( e ) {
+			var picture = 'static/cross.png';
+			this.onMouseClick(e, picture);
+			return false;
+		},
+
+		/**
+		 * Handle mouseclick events.
+		 * 
+		 * @param {jQuery.event} e mouseclick event
+		 * @param {Object} picture
+		 */
+		onMouseClick: function( e, picture ) {
 			// Do some stuff
 			var row = $( e.currentTarget ).data( 'row' ),
 				col = $( e.currentTarget ).data( 'col' );
-			$( e.currentTarget ).attr( 'src', 'static/dark.png');
+			$( e.currentTarget ).attr( 'src', picture);
 		},
 	};
 
