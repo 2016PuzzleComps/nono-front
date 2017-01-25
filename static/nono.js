@@ -74,6 +74,7 @@ var Nonograms = ( function ( $ ){
 			for ( var i = -1; i < width; i++ ) {
 				$tr = $( '<tr>' );
 				this.$cellMatrix[i] = {};
+				this.matrix[i] = {};
 
 				// Add the information block
 				$td = $("<p></p>").text("Text.");
@@ -87,9 +88,11 @@ var Nonograms = ( function ( $ ){
 					}
 					else {
 						// Build the input
-						var picture = 'light.png'
+						var picture = 'light.png';
+						this.matrix[i][j] = 0;
 						if (j%2==0) {
-							picture = 'cross.png'
+							this.matrix[i][j] = 2;
+							picture = 'cross.png';
 						}
 						this.$cellMatrix[i][j] = $( '<img>' )
 							.attr( 'src', 'static/'+picture )
@@ -111,6 +114,40 @@ var Nonograms = ( function ( $ ){
 		},
 
 		/**
+		 * Toggles pictures
+		 * 
+		 * @param {Object} row the row in the matrix
+		 * @param {Object} col the col in the matrix
+		 * @param {Boolean} left whether there was a left click or right
+		 */
+		togglePicture: function( row, col, left ) {
+			// Get value from current matrix model
+			// 0 = light (blank)
+			// 1 = dark
+			// 2 = cross
+			var current = this.matrix[row][col];
+			var picture = 'static/';
+			if (left) {
+				if (current == 0 || current == 2) {
+					picture += 'dark.png';
+					this.matrix[row][col] = 1;
+				} else {
+					picture += 'light.png';
+					this.matrix[row][col] = 0;
+				}
+			} else {
+				if (current == 0 || current == 1) {
+					picture += 'cross.png';
+					this.matrix[row][col] = 2;
+				} else {
+					picture += 'light.png';
+					this.matrix[row][col] = 0;
+				}
+			}
+			this.$cellMatrix[row][col].attr( 'src', picture);
+		},
+
+		/**
 		 * Handle keyup events.
 		 *
 		 * @param {jQuery.event} e Keyup event
@@ -123,8 +160,7 @@ var Nonograms = ( function ( $ ){
 				col = $( e.currentTarget ).data( 'col' );
 
 			// Cache value in matrix
-			this.matrix.row[row][col] = val;
-			this.matrix.col[col][row] = val;
+			this.matrix[row][col] = val;
 		},
 
 		/**
@@ -165,8 +201,9 @@ var Nonograms = ( function ( $ ){
 		 * @param {jQuery.event} e mouseclick event
 		 */
 		onLeftClick: function( e ) {
-			var picture = 'static/dark.png';
-			this.onMouseClick(e, picture);
+			var row = $( e.currentTarget ).data( 'row' ),
+				col = $( e.currentTarget ).data( 'col' );
+			this.togglePicture(row, col, true);
 		},
 
 		/**
@@ -175,22 +212,9 @@ var Nonograms = ( function ( $ ){
 		 * @param {jQuery.event} e mouseclick event
 		 */
 		onRightClick: function( e ) {
-			var picture = 'static/cross.png';
-			this.onMouseClick(e, picture);
-			return false;
-		},
-
-		/**
-		 * Handle mouseclick events.
-		 * 
-		 * @param {jQuery.event} e mouseclick event
-		 * @param {Object} picture
-		 */
-		onMouseClick: function( e, picture ) {
-			// Do some stuff
 			var row = $( e.currentTarget ).data( 'row' ),
 				col = $( e.currentTarget ).data( 'col' );
-			$( e.currentTarget ).attr( 'src', picture);
+			this.togglePicture(row, col, false);
 		},
 	};
 
