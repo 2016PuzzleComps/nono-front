@@ -9,27 +9,16 @@ button, h1 {
 	text-align: center;
 }
 
-.nonograms-menu {
-	width: 50%;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.nonograms-menu button {
-	font-size: 24px;
-	margin: 10px;
-	padding: 5px;
-}
-
 .nonograms-container {
 	border: 5px solid #666;
 	margin-left: auto;
 	margin-right: auto;
+	border-collapse: collapse;
 }
 
 .nonograms-container td {
 	margin: 0;
+	padding: 0;
 }
 
 .nonograms-container img {
@@ -41,8 +30,17 @@ button, h1 {
 	-webkit-user-select: none;
 	-ms-user-select: none;
 	cursor: pointer;
+	border: 1px solid black;
+	margin: 0;
+    padding: 0;
 }
 
 .nonograms-section-one {
 	background: #ccc;
+}
+
+p {
+	margin: 0;
+    padding: 0;
+    border: 0;
 }

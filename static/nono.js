@@ -76,24 +76,20 @@ var Nonograms = ( function ( $ ){
 				this.$cellMatrix[i] = {};
 				this.matrix[i] = {};
 
-				// Add the information block
-				$td = $("<p></p>").text("Text.");
+				// Add the information block on top
+				$td = $("<p></p>").text("b");
 				$tr.append( $td );
 
 				for ( var j = 0; j < width; j++ ) {
 					$td = null;
-					// Add the information block at the top
+					// Add the information block on top
 					if (i < 0) {
-						$td = $( '<td>' ).append( $("<p></p>").text("Texta.") );
+						$td = $( '<td>' ).append( $("<p></p>").text("a.") );
 					}
 					else {
-						// Build the input
+						// Build the input box
 						var picture = 'light.png';
 						this.matrix[i][j] = 0;
-						if (j%2==0) {
-							this.matrix[i][j] = 2;
-							picture = 'cross.png';
-						}
 						this.$cellMatrix[i][j] = $( '<img>' )
 							.attr( 'src', 'static/'+picture )
 							.data( 'row', i )
