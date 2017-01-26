@@ -12,8 +12,10 @@ var Nonograms = ( function ( $ ){
 		 */
 		defaultConfig = {
 		},
-		mouseDown = false;
-		width = 5;
+		mouseDown = false,
+		width = 5,
+		top = [[1],[1,1],[3],[4],[3]],
+		left = [[1,1],[2],[3],[3],[3]];
 
 	/**
 	 * Initialize the singleton
@@ -76,17 +78,31 @@ var Nonograms = ( function ( $ ){
 				this.$cellMatrix[i] = {};
 				this.matrix[i] = {};
 
-				// Add the information block on top
-				$td = $("<p></p>").text("b");
+				// Add the information block on the left
+				$td = $("<td></td>");
+				if ( i >= 0 ) {
+					var constraints = left[i];
+					$td.append("<span>" + constraints[0] + "</span>");
+					for ( var j=1; j<constraints.length; j++ ) {
+						$td.append("&nbsp;");
+						$td.append("<span>" + constraints[j] + "</span>");
+					}
+				}
 				$tr.append( $td );
 
 				for ( var j = 0; j < width; j++ ) {
 					$td = null;
 					// Add the information block on top
 					if (i < 0) {
-						$td = $( '<td>' ).append( $("<p></p>").text("a.") );
-					}
-					else {
+						$td = $("<td></td>")
+							.addClass( 'constraints-top' );
+						var constraints = top[j];
+						$td.append("<span>" + constraints[0] + "</span>");
+						for ( var k=1; k<constraints.length; k++ ) {
+							$td.append("<br/>");
+							$td.append("<span>" + constraints[k] + "</span>");
+						}
+					} else {
 						// Build the input box
 						var picture = 'light.png';
 						this.matrix[i][j] = 0;

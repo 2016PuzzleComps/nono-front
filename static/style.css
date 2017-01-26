@@ -21,6 +21,17 @@ button, h1 {
 	padding: 0;
 }
 
+.nonograms-container tr {
+	margin: 0;
+	padding: 0;
+	text-align: right;
+	vertical-align: middle;
+}
+
+.constraints-top {
+	text-align: center;
+}
+
 .nonograms-container img {
 	display: block;
 	user-drag: none; 
@@ -41,8 +52,17 @@ button, h1 {
 	background: #ccc;
 }
 
-p {
+span {
 	margin: 0;
     padding: 0;
     border: 0;
+}
+
+.constraints-top span {
+	text-align: center;
+}
+
+.constraints-left span {
+	text-align: right;
+	vertical-align: middle;
 }
