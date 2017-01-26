@@ -13,16 +13,12 @@
 		$( document ).ready( function() {
 			var game = Nonograms.getInstance();
 			$( '#board').append( game.getGameBoard() );
-			$( '#undo').click( function() {
-				console.log("Not yet implemented");
-			} );
 			$( '#reset').click( function() {
-				console.log("Not yet implemented");
+				game.reset();
 			} );
 		} );
 		</script>
 		<div id="buttonsDiv">
-			<button id="undo">Undo</button>
 			<button id="reset">Reset</button>
 		</div>
 		<div id="board"></div>

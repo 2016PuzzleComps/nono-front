@@ -13,6 +13,7 @@ var Nonograms = ( function ( $ ){
 		defaultConfig = {
 		},
 		mouseDown = false;
+		width = 5;
 
 	/**
 	 * Initialize the singleton
@@ -69,7 +70,6 @@ var Nonograms = ( function ( $ ){
 				$table = $( '<table>' )
 					.addClass( 'nonograms-container' )
 					.on( 'contextmenu', false );
-			var width = 5;
 
 			for ( var i = -1; i < width; i++ ) {
 				$tr = $( '<tr>' );
@@ -211,6 +211,20 @@ var Nonograms = ( function ( $ ){
 			var row = $( e.currentTarget ).data( 'row' ),
 				col = $( e.currentTarget ).data( 'col' );
 			this.togglePicture(row, col, false);
+		},
+
+		/**
+		 * Resets the game, looping through all the squares
+		 * and resetting them to default (blank) values.
+		 */
+		resetGame: function( ) {
+			var picture = 'static/light.png';
+			for (var row=0; row<width; row++) {
+				for (var col=0; col<width; col++) {
+					this.matrix[row][col] = 0;
+					this.$cellMatrix[row][col].attr( 'src', picture);
+				}
+			}
 		},
 	};
 
