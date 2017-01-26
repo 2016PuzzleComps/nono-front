@@ -42,6 +42,13 @@ var Nonograms = ( function ( $ ){
 			reset: function() {
 				_game.resetGame();
 			},
+
+			/**
+			 * Reset the game board.
+			 */
+			check: function() {
+				_game.checkGame();
+			},
 		};
 	}
 
@@ -126,7 +133,115 @@ var Nonograms = ( function ( $ ){
 		},
 
 		/**
-		 * Toggles pictures
+		 * Method to check to see if the game has been won
+		 */
+		checkGame: function() {
+			if (this.checkPuzzle()) {
+				alert("You've won!");
+			} else {
+				alert("Something is wrong.");
+			}
+		},
+
+		/**
+		 * Looks through the selected squares and gives
+		 * a notification whether or not the user has won.
+		 */
+		checkPuzzle: function( ) {
+			var inBlock = false;
+			var currentCount = 0;
+			var currentBlock = 0;
+
+			// Check that all the left constraints are met
+			for (var row=0; row<width; row++) {
+				var constraints = left[row];
+				currentCount = 0;
+				currentBlock = 0;
+				inBlock = false;
+				for (var col=0; col<width; col++) {
+					if (this.matrix[row][col] == 1) {
+						if ( currentBlock > constraints.length-1 ) {
+							return false;
+						}
+						// If we're in a block, keep adding to it
+						if ( currentCount < constraints[currentBlock] ) {
+							currentCount++;
+						} 
+						// If we've gone past the length of the block, exit
+						else {
+							return false;
+						}
+						inBlock = true;
+					} else {
+						// If we were looking for more blocks, but didn't
+						// find any, exit
+						if ( inBlock && currentCount < constraints[currentBlock] ) {
+							return false;
+						} 
+						// If we just finished a block, then update counters
+						else if ( inBlock && currentCount == constraints[currentBlock] ) {
+							currentCount = 0;
+							currentBlock++;
+						}
+						inBlock = false;
+					}
+				}
+				if ( currentBlock < constraints.length ) {
+					// Check to see if the last block ended
+					if ( currentBlock+1 == constraints.length &&
+							currentCount != constraints[currentBlock] ) {
+						return false;
+					}
+				}
+			}
+			// Check that all the top constraints are met
+			for (var col=0; col<width; col++) {
+				var constraints = top[col];
+				currentCount = 0;
+				currentBlock = 0;
+				inBlock = false;
+				for (var row=0; row<width; row++) {
+					if (this.matrix[row][col] == 1) {
+						if ( currentBlock > constraints.length-1 ) {
+							return false;
+						}
+						// If we're in a block, keep adding to it
+						if ( currentCount < constraints[currentBlock] ) {
+							currentCount++;
+						} 
+						// If we've gone past the length of the block, exit
+						else {
+							return false;
+						}
+						inBlock = true;
+					} else {
+						// If we were looking for more blocks, but didn't
+						// find any, exit
+						if ( inBlock && currentCount < constraints[currentBlock] ) {
+							return false;
+						} 
+						// If we just finished a block, then update counters
+						else if ( inBlock && currentCount == constraints[currentBlock] ) {
+							currentCount = 0;
+							currentBlock++;
+						}
+						inBlock = false;
+					}
+					this.matrix[row][col] = 0;
+				}
+				if ( currentBlock < constraints.length ) {
+					// Check to see if the last block ended
+					if ( currentBlock+1 == constraints.length &&
+							currentCount != constraints[currentBlock] ) {
+						return false;
+					}
+				}
+			}
+			return true;
+		},
+
+		/**
+		 * Toggles picture in a frame
 		 * 
 		 * @param {Object} row the row in the matrix
 		 * @param {Object} col the col in the matrix

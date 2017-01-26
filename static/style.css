@@ -43,7 +43,7 @@ button, h1 {
 	cursor: pointer;
 	border: 1px solid black;
 	margin: 0;
-    padding: 0;
+    padding: 2px;
 	height: 30px;
 	width: 30px;
 }
