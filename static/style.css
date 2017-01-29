@@ -1,12 +1,26 @@
 body {
 	margin: 0;
 	padding: 0;
+	text-align: center;
 }
 
-button, h1 {
-	margin-left: auto;
-	margin-right: auto;
-	text-align: center;
+.button {
+    font-size: 16px;
+    border: none;
+    background-color: #4caf50;
+    color: white;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+	outline: none;
+    font-family: sans-serif;
+}
+.button:hover {
+	background-color: #71c174;
+}
+.button:active {
+	background-color: #2f6a31;
 }
 
 .nonograms-container {

@@ -62,6 +62,7 @@ var Nonograms = ( function ( $ ){
 		// Initialize game parameters
 		this.$cellMatrix = {};
 		this.matrix = {};
+		this.log = "";
 
 		return this;
 	}
@@ -252,26 +253,32 @@ var Nonograms = ( function ( $ ){
 			// 0 = light (blank)
 			// 1 = dark
 			// 2 = cross
+			var logString = row+" "+col;
 			var current = this.matrix[row][col];
 			var picture = 'static/';
 			if (left) {
 				if (current == 0 || current == 2) {
 					picture += 'dark.png';
 					this.matrix[row][col] = 1;
+					logString += " "+1;
 				} else {
 					picture += 'light.png';
 					this.matrix[row][col] = 0;
+					logString += " "+0;
 				}
 			} else {
 				if (current == 0 || current == 1) {
 					picture += 'cross.png';
 					this.matrix[row][col] = 2;
+					logString += " "+2;
 				} else {
 					picture += 'light.png';
 					this.matrix[row][col] = 0;
+					logString += " "+0;
 				}
 			}
 			this.$cellMatrix[row][col].attr( 'src', picture);
+			this.log += logString+"\n";
 		},
 
 		/**
