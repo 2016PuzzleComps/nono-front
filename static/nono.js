@@ -13,6 +13,7 @@ var Nonograms = ( function ( $ ){
 		defaultConfig = {
 		},
 		mouseDown = false,
+		isLeft = false,
 		width = 5,
 		top = [[1],[1,1],[3],[4],[3]],
 		left = [[1,1],[2],[3],[3],[3]];
@@ -118,7 +119,9 @@ var Nonograms = ( function ( $ ){
 							.attr( 'src', 'static/'+picture )
 							.data( 'row', i )
 							.data( 'col', j )
-							.on( 'click', $.proxy( this.onLeftClick, this) )
+							.on( 'mousedown', $.proxy( this.onMouseDown, this) )
+							.on( 'mouseup', $.proxy( this.onMouseUp, this) )
+							.on( 'mouseover', $.proxy( this.onMouseOver, this) )							
 							.on( 'contextmenu',  $.proxy( this.onRightClick, this) );
 
 						$td = $( '<td>' ).append( this.$cellMatrix[i][j] );
@@ -304,6 +307,14 @@ var Nonograms = ( function ( $ ){
 		 */
 		onMouseDown: function( e ) {
 			mouseDown = true;
+			isLeft = false;
+			e = e || window.event;
+			if (e.which == 1) {
+				isLeft = true;
+			}
+			var row = $( e.currentTarget ).data( 'row' ),
+				col = $( e.currentTarget ).data( 'col' );
+			this.togglePicture(row, col, isLeft);
 		},
 
 		/**
@@ -321,34 +332,13 @@ var Nonograms = ( function ( $ ){
 		 * @param {jQuery.event} e mouseover event
 		 */
 		onMouseOver: function( e ) {
+			console.log(mouseDown);
 			if (mouseDown) {
 				// Do some stuff
 				var row = $( e.currentTarget ).data( 'row' ),
 					col = $( e.currentTarget ).data( 'col' );
-				$( e.currentTarget ).attr( 'src', 'static/dark.png');
+				this.togglePicture(row, col, isLeft);
 			}
-		},
-
-		/**
-		 * Handle left mouse click events.
-		 * 
-		 * @param {jQuery.event} e mouseclick event
-		 */
-		onLeftClick: function( e ) {
-			var row = $( e.currentTarget ).data( 'row' ),
-				col = $( e.currentTarget ).data( 'col' );
-			this.togglePicture(row, col, true);
-		},
-
-		/**
-		 * Handle right mouse click events.
-		 * 
-		 * @param {jQuery.event} e mouseclick event
-		 */
-		onRightClick: function( e ) {
-			var row = $( e.currentTarget ).data( 'row' ),
-				col = $( e.currentTarget ).data( 'col' );
-			this.togglePicture(row, col, false);
 		},
 
 		/**
