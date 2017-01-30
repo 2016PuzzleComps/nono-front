@@ -141,10 +141,22 @@ var Nonograms = ( function ( $ ){
 		 */
 		checkGame: function() {
 			if (this.checkPuzzle()) {
-				alert("You've won!");
+				this.openFinish("You've won", "An mturktoken");
 			} else {
 				alert("Something is wrong.");
 			}
+		},
+
+		/**
+		 * Opens the win tab
+		 * 
+		 * @param {String} title the title of the finish
+		 * @param {String} body the body of the message
+		 */
+		openFinish(title, body) {
+			document.getElementById("title").innerHTML = title;
+			document.getElementById("body").innerHTML = body;
+			document.getElementById("finish").style.height = "100%";
 		},
 
 		/**
@@ -332,7 +344,6 @@ var Nonograms = ( function ( $ ){
 		 * @param {jQuery.event} e mouseover event
 		 */
 		onMouseOver: function( e ) {
-			console.log(mouseDown);
 			if (mouseDown) {
 				// Do some stuff
 				var row = $( e.currentTarget ).data( 'row' ),
