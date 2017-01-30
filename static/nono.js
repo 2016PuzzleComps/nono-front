@@ -141,7 +141,7 @@ var Nonograms = ( function ( $ ){
 		 */
 		checkGame: function() {
 			if (this.checkPuzzle()) {
-				this.openFinish("You've won", "An mturktoken");
+				this.submitLog(true);
 			} else {
 				alert("Something is wrong.");
 			}
@@ -153,10 +153,62 @@ var Nonograms = ( function ( $ ){
 		 * @param {String} title the title of the finish
 		 * @param {String} body the body of the message
 		 */
-		openFinish(title, body) {
+		openFinish: function(title, body) {
 			document.getElementById("title").innerHTML = title;
 			document.getElementById("body").innerHTML = body;
 			document.getElementById("finish").style.height = "100%";
+		},
+
+		// submit solve log to server
+		submitLog: function(completed) {
+			var oReq = new XMLHttpRequest();
+			var finish = this.openFinish;
+			// on successful response
+			oReq.addEventListener('load', function() {
+				var title;
+				var body;
+				if(this.status == 200) {
+					var resp = JSON.parse(this.responseText);
+					if(resp.success) {
+						if(resp.mturk_token) {
+							// if they solved it
+							title = "Success! Here's your MTurk token: ";
+							body = resp.mturk_token;
+						} else {
+							// if they gave up
+							title = "Better luck next time!";
+							body = "";
+						}
+					} else {
+						// if they tried to cheat
+						title = "Oops... ";
+						body = resp.message;
+					}
+				} else {
+					// if something went wrong on the server
+					title = "Uh oh...";
+					body = this.statusText;
+				}
+				finish(title, body);
+			});
+			// on connection error
+			oReq.addEventListener('error', function() {
+				console.log('error');
+				finish("Uh oh...", "The server seems to be down. Try again later?");
+			});
+			oReq.open("POST", "http://" + window.location.hostname + ":" + window.location.port + "/log-file");
+			var status;
+			if(completed) {
+				status = 1;
+			} else {
+				status = 2;
+			}
+			var msg = {
+				solve_id: 5,
+				log_file: this.log,
+				status: status
+			};
+			oReq.send(JSON.stringify(msg));
 		},
 
 		/**
