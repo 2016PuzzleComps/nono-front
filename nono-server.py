@@ -70,23 +70,20 @@ def solve_log_is_valid(solve_id, log_file, status):
     log_file = log_file.strip()
     if log_file == '':
         return False
-    # TODO: get actual puzzle file
-    top = [[1], [1,1], [3], [4], [3]]
-    left = [[1,1], [2], [3], [3], [3]]
+    puzzle_file = get_puzzle_file_from_database(solve_id)
+    lines = open('puzzle.txt').read().split("\n")
+    left = [int(x) for x in lines[0].split(" ")]
+    top = [int(x) for x in lines[1].split(" ")]
+    width = len(left)
+    matrix = [x[:] for x in [[False] * width] * width] 
 
-    # TODO: get the matrix from the log file
-    matrix = [
-        [False, True, False, True, False],
-        [False, False, False, True, True],
-        [False, False, True, True, True],
-        [False, False, True, True, True],
-        [True, True, True, False, False]
-    ]
+    for line in log_file.split("\n"):
+        x,y,z = line.split(" ")
+        matrix[x][y] = (z == "1")
 
     inBlock = False
     currentCount = 0
     currentBlock = 0
-    width = 5
 
     # Check that all the left constraints are met
     for row in range(0,width):
