@@ -13,6 +13,89 @@ def get_index():
 # verify that a log file represents a valid solve
 def solve_log_is_valid(solve_id, log_file, status):
     log_file = log_file.strip()
+    if log_file == '':
+        return False
+    # TODO: get actual puzzle file
+    top = [[1], [1,1], [3], [4], [3]]
+    left = [[1,1], [2], [3], [3], [3]]
+
+    # TODO: get the matrix from the log file
+    matrix = [
+        [False, True, False, True, False],
+        [False, False, False, True, True],
+        [False, False, True, True, True],
+        [False, False, True, True, True],
+        [True, True, True, False, False]
+    ]
+
+    inBlock = False
+    currentCount = 0
+    currentBlock = 0
+    width = 5
+
+    # Check that all the left constraints are met
+    for row in range(0,width):
+        constraints = left[row]
+        currentCount = 0
+        currentBlock = 0
+        inBlock = False
+        for col in range(0,width):
+            if matrix[row][col] == 1:
+                if currentBlock > (len(constraints)-1):
+                    return False
+                # If we're in a block, keep adding to it
+                if currentCount < constraints[currentBlock]:
+                    currentCount += 1
+                    # If we've gone past the length of the block, exit
+                else:
+                    return False
+                inBlock = True
+            else:
+                # If we were looking for more blocks, but didn't
+                # find any, exit
+                if inBlock and (currentCount < constraints[currentBlock]):
+                    return False
+                # If we just finished a block, then update counters
+                elif inBlock and currentCount == constraints[currentBlock]:
+                    currentCount = 0
+                    currentBlock += 1
+                inBlock = False
+        if currentBlock < len(constraints):
+            # Check to see if the last block ended
+            if (currentBlock+1) == len(constraints) and currentCount != constraints[currentBlock]:
+                return False
+    # Check that all the top constraints are met
+    for col in range(0,width):
+        constraints = top[col]
+        currentCount = 0
+        currentBlock = 0
+        inBlock = False
+        for row in range(0, width):
+            if matrix[row][col] == 1:
+                if currentBlock > (len(constraints)-1):
+                    return False
+                # If we're in a block, keep adding to it
+                if currentCount < constraints[currentBlock]:
+                    currentCount += 1
+                # If we've gone past the length of the block, exit
+                else:
+                    return False
+                inBlock = True
+            else:
+                # If we were looking for more blocks, but didn't
+                # find any, exit
+                if inBlock and (currentCount < constraints[currentBlock]):
+                    return False
+                # If we just finished a block, then update counters
+                elif inBlock and (currentCount == constraints[currentBlock]):
+                    currentCount = 0
+                    currentBlock += 1
+                inBlock = False
+            matrix[row][col] = 0
+        if currentBlock < len(constraints):
+            # Check to see if the last block ended
+            if currentBlock+1 == len(constraints) and (currentCount != constraints[currentBlock]):
+                return False
     return True
 
 # receive new solve log file from client
