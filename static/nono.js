@@ -331,17 +331,22 @@ var Nonograms = ( function ( $ ){
 
 		// Loads a board from a given block of text
 		loadBoardFromText: function(text) {
-			var lines = text.split("\n");
+            var lines = text.split("\\n");
+			console.log(lines);
 			var leftStrings = lines[0].split(",");
 			var topStrings = lines[1].split(",");
-			left = [];
-			top = [];
-			width = leftStrings.length;
+			this.left = [];
+			this.top = [];
+			this.width = leftStrings.length;
 			for (var i=0; i<width; i++) {
-				left.append(leftStrings[i].split(" ").map(function(x){return parseInt(x)}));
-				top.append(topStrings[i].split(" ").map(function(x){return parseInt(x)}));
+                console.log(leftStrings[i].split(" ").map(function(x){return parseInt(x)}));
+                console.log(topStrings[i].split(" ").map(function(x){return parseInt(x)}));
+                console.log(this.left);
+                console.log(this.top);
+				this.left.push(leftStrings[i].split(" ").map(function(x){return parseInt(x)}));
+				this.top.push(topStrings[i].split(" ").map(function(x){return parseInt(x)}));
 			}
-			this.buildGUI();
+			_game.buildGUI();
 		},
 
 		/**
