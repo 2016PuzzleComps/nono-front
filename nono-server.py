@@ -71,15 +71,15 @@ def solve_log_is_valid(solve_id, log_file, status):
     if log_file == '':
         return False
     puzzle_file = get_puzzle_file_from_database(solve_id)
-    lines = open('puzzle.txt').read().split("\n")
-    left = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
-    top = [[int(y) for y in x.split(" ")] for x in lines[1].split(",")]
+    lines = puzzle_file.split("\\n")
+    left = [[int(y) for y in x.split(" ")] for x in lines[1].split(",")]
+    top = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
     width = len(left)
     matrix = [x[:] for x in [[False] * width] * width] 
 
     for line in log_file.split("\n"):
         x,y,z = line.split(" ")
-        matrix[x][y] = (z == "1")
+        matrix[int(x)][int(y)] = (z == "1")
 
     inBlock = False
     currentCount = 0
