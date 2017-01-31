@@ -16,7 +16,8 @@ var Nonograms = ( function ( $ ){
 		isLeft = false,
 		width = 5,
 		top = [[1],[1,1],[3],[4],[3]],
-		left = [[1,1],[2],[3],[3],[3]];
+		left = [[1,1],[2],[3],[3],[3]],
+        solveID;
 
 	/**
 	 * Initialize the singleton
@@ -98,8 +99,8 @@ var Nonograms = ( function ( $ ){
 					}
 				}
 				$tr.append( $td );
-
-				for ( var j = 0; j < width; j++ ) {
+				
+                for ( var j = 0; j < width; j++ ) {
 					$td = null;
 					// Add the information block on top
 					if (i < 0) {
@@ -133,7 +134,7 @@ var Nonograms = ( function ( $ ){
 				$table.append( $tr );
 			}
 			// Return the GUI table
-			return $table;
+			$("#board").html($table);
 		},
 
 		/**
@@ -146,7 +147,7 @@ var Nonograms = ( function ( $ ){
 				resp = JSON.parse(this.responseText);
 				if(resp.success) {
 					solveID = resp.solve_id;
-					load(resp.puzzle_file);
+					return load(resp.puzzle_file);
 				} else {
 					alert(resp.message);
 				}
@@ -200,7 +201,7 @@ var Nonograms = ( function ( $ ){
 				status = 2;
 			}
 			var msg = {
-				solve_id: 5,
+				solve_id: solveID,
 				log_file: this.log,
 				status: status
 			};
@@ -332,21 +333,16 @@ var Nonograms = ( function ( $ ){
 		// Loads a board from a given block of text
 		loadBoardFromText: function(text) {
             var lines = text.split("\\n");
-			console.log(lines);
-			var leftStrings = lines[0].split(",");
-			var topStrings = lines[1].split(",");
-			this.left = [];
-			this.top = [];
-			this.width = leftStrings.length;
+			var leftStrings = lines[1].split(",");
+			var topStrings = lines[0].split(",");
+			left = [];
+			top = [];
+			width = leftStrings.length;
 			for (var i=0; i<width; i++) {
-                console.log(leftStrings[i].split(" ").map(function(x){return parseInt(x)}));
-                console.log(topStrings[i].split(" ").map(function(x){return parseInt(x)}));
-                console.log(this.left);
-                console.log(this.top);
-				this.left.push(leftStrings[i].split(" ").map(function(x){return parseInt(x)}));
-				this.top.push(topStrings[i].split(" ").map(function(x){return parseInt(x)}));
+				left.push(leftStrings[i].split(" ").map(Number));
+				top.push(topStrings[i].split(" ").map(Number));
 			}
-			_game.buildGUI();
+			return _game.buildGUI();
 		},
 
 		/**

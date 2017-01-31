@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 		$( document ).ready( function() {
 			var game = Nonograms.getInstance();
-			$( '#board').append( game.getGameBoard() );
+			game.getGameBoard();
 			$( '#reset').click( function() {
 				game.reset();
 			} );
