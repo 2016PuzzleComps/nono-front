@@ -72,8 +72,8 @@ def solve_log_is_valid(solve_id, log_file, status):
         return False
     puzzle_file = get_puzzle_file_from_database(solve_id)
     lines = open('puzzle.txt').read().split("\n")
-    left = [int(x) for x in lines[0].split(" ")]
-    top = [int(x) for x in lines[1].split(" ")]
+    left = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
+    top = [[int(y) for y in x.split(" ")] for x in lines[1].split(",")]
     width = len(left)
     matrix = [x[:] for x in [[False] * width] * width] 
 

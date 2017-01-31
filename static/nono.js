@@ -331,14 +331,14 @@ var Nonograms = ( function ( $ ){
 		// Loads a board from a given block of text
 		loadBoardFromText: function(text) {
 			var lines = text.split("\n");
-			var leftStrings = lines[0].split(" ");
-			var topStrings = lines[1].split(" ");
+			var leftStrings = lines[0].split(",");
+			var topStrings = lines[1].split(",");
 			left = [];
 			top = [];
 			width = leftStrings.length;
 			for (var i=0; i<width; i++) {
-				left.append(parseInt(leftStrings[i]));
-				top.append(parseInt(leftStrings[i]));
+				left.append(leftStrings[i].split(" ").map(function(x){return parseInt(x)}));
+				top.append(topStrings[i].split(" ").map(function(x){return parseInt(x)}));
 			}
 			this.buildGUI();
 		},
