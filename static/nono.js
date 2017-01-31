@@ -34,7 +34,7 @@ var Nonograms = ( function ( $ ){
 			 * @returns {jQuery} Game table
 			 */
 			getGameBoard: function() {
-				return _game.buildGUI();
+				return _game.getPuzzleFile();
 			},
 
 			/**
@@ -137,26 +137,21 @@ var Nonograms = ( function ( $ ){
 		},
 
 		/**
-		 * Method to check to see if the game has been won
+		 * Gets a puzzle file from the server
 		 */
-		checkGame: function() {
-			if (this.checkPuzzle()) {
-				this.submitLog(true);
-			} else {
-				alert("Something is wrong.");
-			}
-		},
-
-		/**
-		 * Opens the win tab
-		 * 
-		 * @param {String} title the title of the finish
-		 * @param {String} body the body of the message
-		 */
-		openFinish: function(title, body) {
-			document.getElementById("title").innerHTML = title;
-			document.getElementById("body").innerHTML = body;
-			document.getElementById("finish").style.height = "100%";
+		getPuzzleFile: function () {
+			var oReq = new XMLHttpRequest();
+			oReq.addEventListener('load', function() {
+				resp = JSON.parse(this.responseText);
+				if(resp.success) {
+					solveID = resp.solve_id;
+					this.loadBoardFromText(resp.puzzle_file);
+				} else {
+					alert(resp.message);
+				}
+			});
+			oReq.open("GET", "http://" + window.location.hostname + ":" + window.location.port + "/puzzle-file");
+			oReq.send(null);
 		},
 
 		// submit solve log to server
@@ -306,6 +301,46 @@ var Nonograms = ( function ( $ ){
 				}
 			}
 			return true;
+		},
+
+
+
+		/**
+		 * Method to check to see if the game has been won
+		 */
+		checkGame: function() {
+			if (this.checkPuzzle()) {
+				this.submitLog(true);
+			} else {
+				alert("Something is wrong.");
+			}
+		},
+
+		/**
+		 * Opens the win tab
+		 * 
+		 * @param {String} title the title of the finish
+		 * @param {String} body the body of the message
+		 */
+		openFinish: function(title, body) {
+			document.getElementById("title").innerHTML = title;
+			document.getElementById("body").innerHTML = body;
+			document.getElementById("finish").style.height = "100%";
+		},
+
+		// Loads a board from a given block of text
+		loadBoardFromText: function(text) {
+			var lines = text.split("\n");
+			var leftStrings = lines[0].split(" ");
+			var topStrings = lines[1].split(" ");
+			left = [];
+			top = [];
+			width = leftStrings.length;
+			for (var i=0; i<width; i++) {
+				left.append(parseInt(leftStrings[i]));
+				top.append(parseInt(leftStrings[i]));
+			}
+			this.buildGUI();
 		},
 
 		/**
