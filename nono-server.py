@@ -188,7 +188,6 @@ def post_log_file():
         solve_id = request['solve_id']
         status = request['status']
         solve_info = get_solve_info(solve_id)
-        solve_info = (5, solve_id)
         # see if they send a valid solve_id
         if solve_info:
             log_file = request['log_file']
