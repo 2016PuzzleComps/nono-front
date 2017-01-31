@@ -141,11 +141,12 @@ var Nonograms = ( function ( $ ){
 		 */
 		getPuzzleFile: function () {
 			var oReq = new XMLHttpRequest();
+			var load = this.loadBoardFromText;
 			oReq.addEventListener('load', function() {
 				resp = JSON.parse(this.responseText);
 				if(resp.success) {
 					solveID = resp.solve_id;
-					this.loadBoardFromText(resp.puzzle_file);
+					load(resp.puzzle_file);
 				} else {
 					alert(resp.message);
 				}
