@@ -357,7 +357,7 @@ var Nonograms = ( function ( $ ){
 			// 0 = light (blank)
 			// 1 = dark
 			// 2 = cross
-			var logString = row+" "+col;
+			var logString = Date.now()+" "+row+" "+col;
 			var current = this.matrix[row][col];
 			var picture = 'static/';
 			if (left) {
