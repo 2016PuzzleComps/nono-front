@@ -72,13 +72,19 @@ def solve_log_is_valid(solve_id, log_file, status):
         return False
     puzzle_file = get_puzzle_file_from_database(solve_id)
     lines = puzzle_file.split("\\n")
+    lines[0] = lines[0].replace(",,",",0,")
+    lines[1] = lines[1].replace(",,",",0,")
+    if lines[0][-1] == ",":
+        lines[0] = lines[0]+"0"
+    if lines[1][-1] == ",":
+        lines[1] = lines[1]+"0"
     left = [[int(y) for y in x.split(" ")] for x in lines[1].split(",")]
     top = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
     width = len(left)
     matrix = [x[:] for x in [[False] * width] * width] 
 
     for line in log_file.split("\n"):
-        x,y,z = line.split(" ")
+        time,x,y,z = line.split(" ")
         matrix[int(x)][int(y)] = (z == "1")
 
     inBlock = False
