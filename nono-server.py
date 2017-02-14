@@ -71,13 +71,19 @@ def solve_log_is_valid(solve_id, log_file, status):
     if log_file == '':
         return False
     puzzle_file = get_puzzle_file_from_database(solve_id)
-    lines = puzzle_file.split("\\n")
+    lines = puzzle_file.split("\n")
     lines[0] = lines[0].replace(",,",",0,")
     lines[1] = lines[1].replace(",,",",0,")
     if lines[0][-1] == ",":
         lines[0] = lines[0]+"0"
     if lines[1][-1] == ",":
         lines[1] = lines[1]+"0"
+    if lines[0][0] == ",":
+        lines[0] = "0"+lines[0]
+    if lines[1][0] == ",":
+        lines[1] = "0"+lines[1]
+    print(lines[0])
+    print(lines[1])
     left = [[int(y) for y in x.split(" ")] for x in lines[1].split(",")]
     top = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
     width = len(left)

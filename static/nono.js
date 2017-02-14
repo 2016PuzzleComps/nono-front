@@ -332,7 +332,7 @@ var Nonograms = ( function ( $ ){
 
 		// Loads a board from a given block of text
 		loadBoardFromText: function(text) {
-            var lines = text.split("\\n");
+            var lines = text.split("\n");
 			var leftStrings = lines[1].split(",");
 			var topStrings = lines[0].split(",");
 			left = [];
