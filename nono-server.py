@@ -234,5 +234,5 @@ if __name__ == '__main__':
         exit(1)
     host = sys.argv[1]
     port = int(sys.argv[2])
-    app.run(host=host, port=port)
+    app.run(host=host, port=port, threaded=True)
     connection.close()
