@@ -74,6 +74,8 @@ def solve_log_is_valid(solve_id, log_file, status):
     lines = puzzle_file.split("\n")
     lines[0] = lines[0].replace(",,",",0,")
     lines[1] = lines[1].replace(",,",",0,")
+    lines[0] = lines[0].replace(",,",",0,")
+    lines[1] = lines[1].replace(",,",",0,")
     if lines[0][-1] == ",":
         lines[0] = lines[0]+"0"
     if lines[1][-1] == ",":
