@@ -1,31 +1,52 @@
 import sys
-import flask
+from flask import request, make_response
 import psycopg2
 import json
 import config1 as config
 import hashlib
 import time
+import random
+import math
+import pickle
+#from mle import MLE
+from validation import *
 
 app = flask.Flask(__name__)
 
 @app.route('/')
 def get_index():
-    return flask.render_template('index.html')
+    resp = make_response(flask.render_template('index.html'))
+    solver_id = request.cookies.get('solver_id')
+    if not solver_id or solver_id not in solvers_table:
+        solver_id = create_new_solver_id(request)
+        resp.set_cookie('solver_id', solver_id)
+        solvers_table[solver_[id] = Solver()
+    return resp
 
-# compute the MTurk Token for a solve
-def compute_mturk_token(solve_id):
-    m = hashlib.md5()
-    #food = solve_id + str(time.time())
-    food = solve_id
-    m.update(food.encode('utf-8'))
-    return m.hexdigest()
+# delete a solver's solve history
+@app.route('/solver_history', methods=['DELETE'])
+def reset_solve_history():
+    solver_id = request.cookies.get('solver_id')
+    if not solver_id:
+        response = {'success': False, 'message': 'No solver_id set!'}
+    else: 
+        del solvers_table[solver_id]
+        response = {'success': True}
+    return jsom.dumps(response)
 
-# compute a unique identifier for a solve
-def compute_solve_id(puzzle_id):
-    m = hashlib.md5()
-    food = str(puzzle_id) + '.' + str(time.time())
-    m.update(food.encode('utf-8'))
-    return m.hexdigest()
+# get ID of a puzzle with fewest or tied for fewest logs in DB
+@app.route('/puzzle', methods=['GET'])
+def get_puzzle_file():
+    solver_id = request.cookies.get('solver_id')
+    if not solver_id:
+        response = {'success': False, 'message': 'No solver_id set!'}
+    else:
+        puzzle_id = get_appropriate_puzzle_id(solver_id)
+        puzzle_file = get_puzzle_file_from_database(puzzle_id)
+        response = {'success': True, 'puzzle_id': puzzle_id, 'puzzle_file': puzzle_file, 'stats': {'puzzle_score': get_puzzle_score(puzzle_id)}}
+    return json.dumps(response)
+
+
 
 # get ID of a puzzle with fewest or tied for fewest logs in DB
 def get_next_puzzle_id():
@@ -65,106 +86,7 @@ def verify_mturk_token(mturk_token):
     rows = select_from_database(query)
     return rows[0] > 0
 
-# verify that a log file represents a valid solve
-def solve_log_is_valid(solve_id, log_file, status):
-    log_file = log_file.strip()
-    if log_file == '':
-        return False
-    puzzle_file = get_puzzle_file_from_database(solve_id)
-    lines = puzzle_file.split("\n")
-    lines[0] = lines[0].replace(",,",",0,")
-    lines[1] = lines[1].replace(",,",",0,")
-    lines[0] = lines[0].replace(",,",",0,")
-    lines[1] = lines[1].replace(",,",",0,")
-    if lines[0][-1] == ",":
-        lines[0] = lines[0]+"0"
-    if lines[1][-1] == ",":
-        lines[1] = lines[1]+"0"
-    if lines[0][0] == ",":
-        lines[0] = "0"+lines[0]
-    if lines[1][0] == ",":
-        lines[1] = "0"+lines[1]
-    print(lines[0])
-    print(lines[1])
-    left = [[int(y) for y in x.split(" ")] for x in lines[1].split(",")]
-    top = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
-    width = len(left)
-    matrix = [x[:] for x in [[False] * width] * width] 
-
-    for line in log_file.split("\n"):
-        time,x,y,z = line.split(" ")
-        matrix[int(x)][int(y)] = (z == "1")
-
-    inBlock = False
-    currentCount = 0
-    currentBlock = 0
-
-    # Check that all the left constraints are met
-    for row in range(0,width):
-        constraints = left[row]
-        currentCount = 0
-        currentBlock = 0
-        inBlock = False
-        for col in range(0,width):
-            if matrix[row][col] == 1:
-                if currentBlock > (len(constraints)-1):
-                    return False
-                # If we're in a block, keep adding to it
-                if currentCount < constraints[currentBlock]:
-                    currentCount += 1
-                    # If we've gone past the length of the block, exit
-                else:
-                    return False
-                inBlock = True
-            else:
-                # If we were looking for more blocks, but didn't
-                # find any, exit
-                if inBlock and (currentCount < constraints[currentBlock]):
-                    return False
-                # If we just finished a block, then update counters
-                elif inBlock and currentCount == constraints[currentBlock]:
-                    currentCount = 0
-                    currentBlock += 1
-                inBlock = False
-        if currentBlock < len(constraints):
-            # Check to see if the last block ended
-            if (currentBlock+1) == len(constraints) and currentCount != constraints[currentBlock]:
-                return False
-    # Check that all the top constraints are met
-    for col in range(0,width):
-        constraints = top[col]
-        currentCount = 0
-        currentBlock = 0
-        inBlock = False
-        for row in range(0, width):
-            if matrix[row][col] == 1:
-                if currentBlock > (len(constraints)-1):
-                    return False
-                # If we're in a block, keep adding to it
-                if currentCount < constraints[currentBlock]:
-                    currentCount += 1
-                # If we've gone past the length of the block, exit
-                else:
-                    return False
-                inBlock = True
-            else:
-                # If we were looking for more blocks, but didn't
-                # find any, exit
-                if inBlock and (currentCount < constraints[currentBlock]):
-                    return False
-                # If we just finished a block, then update counters
-                elif inBlock and (currentCount == constraints[currentBlock]):
-                    currentCount = 0
-                    currentBlock += 1
-                inBlock = False
-            matrix[row][col] = 0
-        if currentBlock < len(constraints):
-            # Check to see if the last block ended
-            if currentBlock+1 == len(constraints) and (currentCount != constraints[currentBlock]):
-                return False
-    return True
-
-# load a solve lo  file into the DB
+# load a solve log file into the DB
 def submit_log_file(solve_id, puzzle_id, log_file, status):
     # add each move in the log to nono_solve_logs
     log_file = log_file.strip()
@@ -207,7 +129,8 @@ def post_log_file():
             log_file = request['log_file']
             puzzle_id, mturk_token = solve_info
             # see if the log is valid in light of whether or not they purport to have solved it
-            if solve_log_is_valid(puzzle_id, log_file, status):
+            puzzle_file = get_puzzle_file_from_database(puzzle_id)
+            if solve_log_is_valid(puzzle_file, log_file, status):
                 if status == 1:
                     response = {'success': True, 'mturk_token': mturk_token}
                 else:
@@ -242,5 +165,16 @@ if __name__ == '__main__':
         exit(1)
     host = sys.argv[1]
     port = int(sys.argv[2])
-    app.run(host=host, port=port, threaded=True)
-    connection.close()
+    # restore solvers_table from pickled file
+    solvers_table_file = open("solvers_table.pickle", "w+")
+    try:
+        pickle.load(solvers_table, solvers_table_file)
+    except:
+        pass
+    
+    # run the app, when you stop it, save solvers_table
+    try:
+        app.run(host=host, port=port, threaded=True)
+    except KeyboardInterrupt:
+        pickle.dump(solvers_table, solvers_table_file)
+        connection.close()
