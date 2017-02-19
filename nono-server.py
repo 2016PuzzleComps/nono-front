@@ -1,4 +1,5 @@
 import sys
+import flask
 from flask import request, make_response
 import psycopg2
 import json
@@ -8,7 +9,7 @@ import time
 import random
 import math
 import pickle
-#from mle import MLE
+from mle import MLE
 from validation import *
 
 app = flask.Flask(__name__)
@@ -79,7 +80,7 @@ solvers_table = {}
 ideal_score = 500
 max_score = 1000 # TODO: fine-tune this
 norm_spread = 5 # TODO: fine-tune this
-mle = MLE(max_score, norm_spread)
+#mle = MLE(max_score, norm_spread)
 
 # correlation coefficients
 wwf_coef = 6.51
