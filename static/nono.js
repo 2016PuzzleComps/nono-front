@@ -17,7 +17,8 @@ var Nonograms = ( function ( $ ){
 		width = 5,
 		top = [[1],[1,1],[3],[4],[3]],
 		left = [[1,1],[2],[3],[3],[3]],
-        solveID;
+        puzzleID,
+        puzzleDiff;
 
 	/**
 	 * Initialize the singleton
@@ -146,7 +147,9 @@ var Nonograms = ( function ( $ ){
 			oReq.addEventListener('load', function() {
 				resp = JSON.parse(this.responseText);
 				if(resp.success) {
-					solveID = resp.solve_id;
+					puzzleID = resp.puzzle_id;
+                    console.log(resp.stats);
+                    puzzleDiff = resp.stats.puzzle_score;
 					return load(resp.puzzle_file);
 				} else {
 					alert(resp.message);
@@ -167,15 +170,9 @@ var Nonograms = ( function ( $ ){
 				if(this.status == 200) {
 					var resp = JSON.parse(this.responseText);
 					if(resp.success) {
-						if(resp.mturk_token) {
-							// if they solved it
-							title = "Success! Here's your MTurk token: ";
-							body = resp.mturk_token;
-						} else {
-							// if they gave up
-							title = "Better luck next time!";
-							body = "";
-						}
+						title = "Good job!";
+                        body = "Based off your last solve, we reccoment this puzzle.\n"+
+                            "Puzzle Difficulty: " + puzzleDiff.toString() + " | Your Solve Difficulty: " + resp.stats.log_score;
 					} else {
 						// if they tried to cheat
 						title = "Oops... ";
@@ -193,7 +190,7 @@ var Nonograms = ( function ( $ ){
 				console.log('error');
 				finish("Uh oh...", "The server seems to be down. Try again later?");
 			});
-			oReq.open("POST", "http://" + window.location.hostname + ":" + window.location.port + "/log-file");
+			oReq.open("POST", "http://" + window.location.hostname + ":" + window.location.port + "/log");
 			var status;
 			if(completed) {
 				status = 1;
@@ -201,9 +198,9 @@ var Nonograms = ( function ( $ ){
 				status = 2;
 			}
 			var msg = {
-				solve_id: solveID,
 				log_file: this.log,
-				status: status
+				status: status,
+                puzzle_id: puzzleID
 			};
 			oReq.send(JSON.stringify(msg));
 		},

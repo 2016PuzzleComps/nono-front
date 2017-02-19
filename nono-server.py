@@ -78,9 +78,10 @@ solvers_table = {}
 
 # ideal score
 ideal_score = 500
-max_score = 1000 # TODO: fine-tune this
-norm_spread = 5 # TODO: fine-tune this
-#mle = MLE(max_score, norm_spread)
+max_score = 1000 # TODO: Highest value in the db
+norm_spread = 500 # TODO: similar average spread
+angle = 200 # TODO: finte-tune this
+mle = MLE(max_score, norm_spread, angle)
 
 # correlation coefficients
 wwf_coef = 6.51
