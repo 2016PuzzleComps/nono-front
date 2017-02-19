@@ -137,7 +137,7 @@ def get_appropriate_puzzle_id(solver_id):
     return rows[i][0]
 
 def get_puzzle_score(puzzle_id):
-    query = ("SELECT difficulty FROM puzzles WHERE puzzle_id = '%s';", (puzzle_id,))
+    query = ("SELECT difficulty FROM nono_puzzles WHERE puzzle_id = %s;", (puzzle_id,))
     rows = select_from_database(query)
     difficulty = int(rows[0][0])
     return (wwf_coef * difficulty) + (wwf2_coef * difficulty * difficulty) + puzzle_score_offset
@@ -152,7 +152,7 @@ def get_log_score(log_file):
 
 # load puzzle file from db given its ID
 def get_puzzle_file_from_database(puzzle_id):
-    query = ("SELECT puzzle_file FROM nono_puzzles WHERE puzzle_id = '%s';", (puzzle_id,))
+    query = ("SELECT puzzle_file FROM nono_puzzles WHERE puzzle_id = %s;", (puzzle_id,))
     rows = select_from_database(query)
     puzzle_file = rows[0][0]
     return puzzle_file

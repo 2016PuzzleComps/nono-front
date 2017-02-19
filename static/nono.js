@@ -152,7 +152,7 @@ var Nonograms = ( function ( $ ){
 					alert(resp.message);
 				}
 			});
-			oReq.open("GET", "http://" + window.location.hostname + ":" + window.location.port + "/puzzle-file");
+			oReq.open("GET", "http://" + window.location.hostname + ":" + window.location.port + "/puzzle");
 			oReq.send(null);
 		},
 
