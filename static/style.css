@@ -16,6 +16,27 @@ body {
 	outline: none;
     font-family: sans-serif;
 }
+
+#nextPuzzle {
+    background:  transparent;
+    height:  38px;
+    line-height:  40px;
+    border:  2px solid white;
+    display:  inline-block;
+    float:  none;
+    text-align:  center;
+    width:  120px;
+    padding:  0px!important;
+    font-size:  14px;
+    color:  #fff;
+}
+
+#nextPuzzle:hover  {
+    color:  #fff;
+    background:  rgba(255, 255, 255, 0.2);
+}
+
+
 .button:hover {
 	background-color: #71c174;
 }

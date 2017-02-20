@@ -171,7 +171,7 @@ var Nonograms = ( function ( $ ){
 					var resp = JSON.parse(this.responseText);
 					if(resp.success) {
 						title = "Good job!";
-                        body = "Based off your last solve, we reccoment this puzzle.\n"+
+                        body = "Based off your solve history, we recommend this puzzle.\n"+
                             "Puzzle Difficulty: " + puzzleDiff.toString() + " | Your Solve Difficulty: " + resp.stats.log_score;
 					} else {
 						// if they tried to cheat
@@ -315,6 +315,7 @@ var Nonograms = ( function ( $ ){
 			}
 		},
 
+
 		/**
 		 * Opens the win tab
 		 * 
@@ -325,7 +326,12 @@ var Nonograms = ( function ( $ ){
 			document.getElementById("title").innerHTML = title;
 			document.getElementById("body").innerHTML = body;
 			document.getElementById("finish").style.height = "100%";
+            document.getElementById("nextPuzzle").click(function() {
+                document.getElementById("finish").style.height = "0%";
+                getPuzzleFile();
+            });
 		},
+
 
 		// Loads a board from a given block of text
 		loadBoardFromText: function(text) {
