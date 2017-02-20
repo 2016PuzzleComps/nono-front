@@ -52,6 +52,13 @@ var Nonograms = ( function ( $ ){
 			check: function() {
 				_game.checkGame();
 			},
+
+            /**
+             * Loads the next puzzle
+             */
+            nextPuzzle: function() {
+                _game.nextPuzzle();
+            },
 		};
 	}
 
@@ -326,11 +333,15 @@ var Nonograms = ( function ( $ ){
 			document.getElementById("title").innerHTML = title;
 			document.getElementById("body").innerHTML = body;
 			document.getElementById("finish").style.height = "100%";
-            document.getElementById("nextPuzzle").click(function() {
-                document.getElementById("finish").style.height = "0%";
-                getPuzzleFile();
-            });
 		},
+
+        /**
+         * Loads the next puzzle for the user.
+         */
+        nextPuzzle: function() {
+            document.getElementById("finish").style.height = "0%";
+            this.getPuzzleFile();
+        },
 
 
 		// Loads a board from a given block of text
