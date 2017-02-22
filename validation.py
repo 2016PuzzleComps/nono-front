@@ -22,7 +22,6 @@ def solve_log_is_valid(puzzle_file, log_file, status):
     top = [[int(y) for y in x.split(" ")] for x in lines[0].split(",")]
     width = len(left)
     matrix = [x[:] for x in [[False] * width] * width] 
-
     for line in log_file.split("\n"):
         time,x,y,z = line.split(" ")
         matrix[int(x)][int(y)] = (z == "1")

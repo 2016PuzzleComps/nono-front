@@ -155,7 +155,6 @@ var Nonograms = ( function ( $ ){
 				resp = JSON.parse(this.responseText);
 				if(resp.success) {
 					puzzleID = resp.puzzle_id;
-                    console.log(resp.stats);
                     puzzleDiff = resp.stats.puzzle_score;
 					return load(resp.puzzle_file);
 				} else {
@@ -340,6 +339,7 @@ var Nonograms = ( function ( $ ){
          */
         nextPuzzle: function() {
             document.getElementById("finish").style.height = "0%";
+            this.log = "";
             this.getPuzzleFile();
         },
 
