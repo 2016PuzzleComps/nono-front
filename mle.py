@@ -1,4 +1,4 @@
-from math import e, pi
+from math import e, pi, log
 from scipy.optimize import minimize
 from scipy.stats import norm
 
@@ -11,6 +11,9 @@ class MLE:
 
     def expected_s(self, p, t):
         return self.max_score/(1 + e**((t-p)/self.angle)) 
+
+    def expected_p(self, s, t):
+        return t - self.angle * log(self.max_score/s - 1)
 
     def conditional_pdf(self, s, p, t):
         loc = self.expected_s(p, t)
